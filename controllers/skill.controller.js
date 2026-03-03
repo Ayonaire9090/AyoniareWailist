@@ -2,7 +2,7 @@ const Skill = require('../models/skill.model');
 
 exports.createSkill = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name  } = req.body;
     const skill = new Skill({ name });
     await skill.save();
     res.status(201).json(skill);
