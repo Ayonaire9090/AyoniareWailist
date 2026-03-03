@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 const skillRoutes = require('./routes/skill.routes');
 const waitlistRoutes = require('./routes/waitlist.routes');
+const courseRoutes = require("./routes/course.routes")
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api/skills', skillRoutes);
 app.use('/api/waitlist', waitlistRoutes);
+app.use('/api/course', courseRoutes)
 
 // Start server
 const PORT = process.env.PORT || 5000;
