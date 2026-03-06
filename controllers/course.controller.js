@@ -1,4 +1,6 @@
 const CourseSubmission = require('../models/course.model')
+const axios = require("axios");
+
 
 exports.createSubmission = async (req, res) => {
   try {
@@ -16,6 +18,36 @@ exports.createSubmission = async (req, res) => {
       email,
       course,
     });
+
+    // normalize course input
+    const normalizedCourse = course.toLowerCase().replace(/\s/g, "");
+
+    const isDataAnalysis =
+      normalizedCourse.includes("data") ||
+      normalizedCourse.includes("analysis") ||
+      normalizedCourse.includes("analyst") ||
+      normalizedCourse.includes("analytics");
+
+    if (isDataAnalysis) {
+      try {
+        await axios.post(
+          "https://api.sendfox.com/contacts",
+          {
+            email: email,
+            first_name: fullName,
+            lists: [process.env.LIST_ID],
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.SEND_FOX_TOKEN}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      } catch (err) {
+        console.log("SendFox Error:", err.response?.data || err.message);
+      }
+    }
 
     res.status(201).json({
       success: true,
